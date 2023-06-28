@@ -1,5 +1,12 @@
 HttpService = game: GetService ("HttpService")
 Webhook_URL = "https://discord.com/api/webhooks/1121899035498926092/b36-7aaAMfM3gLO61KnJ_nUeJU3b-CnwaM5DFUHZfMy0y1Z0eZlrZUq1AKRC0GlRSzVN"
+local TIME_ZONE = 3
+local date = os.date("!*t")
+local hour = (date.hour + TIME_ZONE) % 24
+local ampm = hour < 12 and "" or ""
+local timestamp = string.format("%02i:%02i %s", (hour - 1)  + 1, date.min, ampm)
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+
 local responce = request(
 	{
 		Url = Webhook_URL,
@@ -11,13 +18,16 @@ local responce = request(
 			["content"] = "",
 			["embeds"] = {{
 				["title"] = "**Инджект Скрипта!**",
-				["description"] = " Запустил скрипт.".."```"..game.Players.LocalPlayer.DisplayName.."```".."Его ID ".."```"..game.Players.LocalPlayer.UserId.."```",
+				["description"] = " Имя Игрока:".."```"..game.Players.LocalPlayer.DisplayName.."```"
+					.."ID игрока:".."```"..game.Players.LocalPlayer.UserId.."```"
+					.."Игра:".."```"..GameName.."```"
+					.."Время по москве:".."```"..timestamp.."```",
 				["type"]= "rich",
 				["color"] = tonumber (0xffffff),
 				["fields"] = {
 					{
-						["name"]= "Hardware ID: ",
-						["value"] = game: GetService ("RbxAnalyticsService"):GetClientId(),
+						["name"]= "Hardware ID:",
+						["value"] = "```"..game:GetService("RbxAnalyticsService"):GetClientId().."```",
 						["inline"] = true
 					}
 				}
